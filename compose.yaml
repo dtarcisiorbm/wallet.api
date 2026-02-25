@@ -1,20 +1,24 @@
+# compose.yaml
 services:
   postgres:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=mydatabase'      # Nome do banco usado no application.properties
+      - 'POSTGRES_PASSWORD=secret'    # Senha do banco
+      - 'POSTGRES_USER=myuser'        # Usuário do banco
     ports:
-      - '5432'
+      - '5432:5432'                   # Mapeamento de porta para acesso local
+
   rabbitmq:
-    image: 'rabbitmq:latest'
+    image: 'rabbitmq:3-management'    # Versão com painel de controle (Management Plugin)
     environment:
-      - 'RABBITMQ_DEFAULT_PASS=secret'
-      - 'RABBITMQ_DEFAULT_USER=myuser'
+      - 'RABBITMQ_DEFAULT_PASS=secret' # Senha do RabbitMQ
+      - 'RABBITMQ_DEFAULT_USER=myuser' # Usuário do RabbitMQ
     ports:
-      - '5672'
+      - '5672:5672'                   # Porta de mensagens
+      - '15672:15672'                 # Porta do painel web (localhost:15672)
+
   redis:
     image: 'redis:latest'
     ports:
-      - '6379'
+      - '6379:6379'                   # Porta do Redis para cache de saldo
