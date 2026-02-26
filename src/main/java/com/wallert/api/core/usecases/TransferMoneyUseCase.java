@@ -1,14 +1,17 @@
 package com.wallert.api.core.usecases;
 
 
+import com.wallert.api.core.domain.Transaction;
 import com.wallert.api.core.ports.AccountRepository;
 import com.wallert.api.core.ports.OutboxRepository;
 
+import com.wallert.api.core.ports.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -17,7 +20,7 @@ public class TransferMoneyUseCase {
 
     private final AccountRepository accountRepository;
     private final OutboxRepository outboxRepository;
-
+    private final TransactionRepository transactionRepository;
     @Transactional // Essencial: se um falhar, nada é gravado
     public void execute(UUID senderId, UUID receiverId, BigDecimal amount) {
         // 1. Recuperar ambas as contas
@@ -30,6 +33,8 @@ public class TransferMoneyUseCase {
         // 2. Aplicar as regras de negócio no domínio
         sender.debit(amount);   // Já implementado
         receiver.credit(amount); // Novo método
+        var transaction = new Transaction(UUID.randomUUID(), senderId, receiverId, amount, LocalDateTime.now());
+        transactionRepository.save(transaction);
 
         // 3. Persistir as alterações
         accountRepository.save(sender);
