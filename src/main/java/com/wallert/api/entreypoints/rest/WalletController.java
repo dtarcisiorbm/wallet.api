@@ -19,10 +19,12 @@ public class WalletController {
         this.transferUseCase = transferUseCase;
     }
 
+    // src/main/java/com/wallert/api/entreypoints/rest/WalletController.java
+
     @PostMapping("/transfer")
     public ResponseEntity<Void> transfer(@Valid @RequestBody TransferRequest request) {
-        // Aqui você extrai os dados do DTO e passa para o Use Case
-        transferUseCase.execute(request.senderId(), request.amount());
+        // Agora passamos os dois IDs e o valor
+        transferUseCase.execute(request.senderId(), request.receiverId(), request.amount());
         return ResponseEntity.accepted().build();
     }
 }

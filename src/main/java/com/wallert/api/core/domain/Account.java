@@ -25,4 +25,12 @@ public class Account {
         if (this.balance.compareTo(amount) < 0) throw new RuntimeException("Saldo insuficiente");
         this.balance = this.balance.subtract(amount);
     }
+    // src/main/java/com/wallert/api/core/domain/Account.java
+
+    public void credit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("O valor do crédito deve ser positivo");
+        }
+        this.balance = this.balance.add(amount);
+    }
 }
